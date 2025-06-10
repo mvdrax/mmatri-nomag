@@ -1,0 +1,104 @@
+<!-- Selecteur d'agence -->
+<select [(ngModel)]="selectedAgence" (change)="onAgenceOrPeriodChange()">
+  <option *ngFor="let agence of listAgences" [value]="agence.code">
+    {{ agence.label }}
+  </option>
+</select>
+
+<!-- Selecteur de période -->
+<select [(ngModel)]="selectedPeriod" (change)="onAgenceOrPeriodChange()">
+  <option *ngFor="let period of listPeriods" [value]="period">
+    {{ period }}
+  </option>
+</select>
+
+<h2>Archives</h2>
+
+<!-- Tabs -->
+<ul class="nav nav-tabs">
+  <li [ngClass]="{ active: tab === 1 }" (click)="onTabChange(1)">
+    <a href="#">Factures</a>
+  </li>
+  <li [ngClass]="{ active: tab === 2 }" (click)="onTabChange(2)">
+    <a href="#">Fiches de paie</a>
+  </li>
+</ul>
+
+<div [ngSwitch]="tab">
+<div *ngSwitchCase="1" class="tables">
+  <table>
+    <thead>
+      <tr class="categories">
+        <th>Entreprise</th>
+        <th>Période</th>
+        <th>Facture</th>
+      </tr>
+      <tr class="categoriesIcons">
+        <th>
+          <button (click)="filteredSearch()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <input
+            class="search-bar"
+            [(ngModel)]="searchQueryFactures"
+            (input)="filteredSearch()"
+            type="text"
+            placeholder="Recherche"
+          />
+        </th>
+
+        
+        <th><i class="fa-solid fa-file-arrow-down"></i></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of newFilteredList" class="items">
+        <td>{{ item.tiersName }}</td>
+        <td>{{ item.dateFile | date: 'dd.MM.yyyy' }}</td>
+        <td class="btnsDandU">
+           <a class="btnDandU" [href]="getBlobUrl(item.docFile)" target="_blank">Ouvrir</a>
+          
+          <a class="btnDandU" [href]="getBlobUrl(item.docFile)" [attr.download]="item.tiersName + '.pdf'" target="_blank">Télécharger</a> 
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Onglet Fiches de paie -->
+<div *ngSwitchCase="2" class="tables">
+  <table>
+    <thead>
+      <tr class="categories">
+        <th>Intérimaire</th>
+        <th>Période</th>
+        <th>Fiche de paie</th>
+      </tr>
+      <tr class="categoriesIcons">
+        <th>
+          <button (click)="filteredSearch()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <div class="search-bar">
+            <input [(ngModel)]="searchQueryFiches" (input)="filteredSearch()" type="text" placeholder="Recherche" />
+          </div>
+        </th>
+       
+        <th><i class="fa-solid fa-file-arrow-down"></i></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of newFilteredList" class="items">
+        <td>{{ item.tiersName }}</td>
+        <td>{{ item.dateFile | date: 'dd.MM.yyyy' }}</td>
+        <td class="btnsDandU">
+          <a class="btnDandU" [href]="getBlobUrl(item.docFile)" target="_blank">Ouvrir</a>
+          <a class="btnDandU" [href]="getBlobUrl(item.docFile)" [attr.download]="item.tiersName + '.pdf'" target="_blank">Télécharger</a> 
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
